@@ -12,22 +12,49 @@
 #define PI 3.14159265358979323846
 #define ASPECT_RATIO (WIDTH/HEIGHT)
 
+typedef enum e_obj_type
+{
+    SPHERE,
+    PLANE,
+    CYLINDER
+} t_obj_type;
+
+typedef struct s_sphere
+{
+    t_vec3  center;     // Kürenin merkez noktası
+    double  diameter;   // Çapı (Yarıçap = diameter / 2)
+} t_sphere;
+
+typedef struct s_plane
+{
+    t_vec3  point;      // Düzlem üzerindeki herhangi bir nokta
+    t_vec3  normal;     // Düzlemin baktığı yön (normalize edilmiş olmalı)
+} t_plane;
+
+typedef struct s_cylinder
+{
+    t_vec3  center;     // Silindirin merkez noktası
+    t_vec3  normal;     // Silindirin uzandığı eksen (normalize edilmiş olmalı)
+    double  diameter;   // Çapı
+    double  height;     // Yüksekliği
+} t_cylinder;
+
+typedef struct s_object
+{
+    t_obj_type      type;   // Bu obje ne? (SPHERE, PLANE, CYLINDER)
+    void            *data;  // Şeklin kendi özel verileri (t_sphere*, t_plane* vb.)
+    t_vec3          color;  // Objenin RGB rengi (Ortak özellik)
+    struct s_object *next;  // Listedeki bir sonraki objeye işaretçi
+} t_object;
+
 typedef struct s_vec3
 {
     double x, y, z;
 } t_vec3;
 
-typedef struct s_sphere
-{
-    t_vec3 center;
-    double diameter;
-    t_vec3 color;
-} t_sphere;
-
 typedef struct s_scene
 {
-    t_sphere *spheres; 
-    int sphere_count;
+	t_object    *objects;
 	t_camera camera;
 	t_light light;
 } t_scene;
@@ -62,6 +89,8 @@ typedef struct s_camera
     t_vec3 orientation;  // Kameranın baktığı yön (3D vektör)
     int fov;             // Görüş açısı (Field of View)
 } t_camera;
+
+
 
 t_vec3	vec_add(t_vec3 vector1, t_vec3 vector2);
 t_vec3	vec_sub(t_vec3 vector1, t_vec3 vector2);
