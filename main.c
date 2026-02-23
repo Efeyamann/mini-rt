@@ -30,42 +30,19 @@ t_scene init_mock_scene()
     return (scene);
 }
 
-int main()
+
+int	main(void)
 {
-	int x;
-	int y;
-	t_scene my_scene;
-	t_data data;
-	t_ray ray;
-	double fov_fact;
-	t_vec3 temp;
+	t_scene	my_scene;
+	t_data	data;
 
 	my_scene = init_mock_scene();
-	data.mlx = mlx_init();
-	if (data.mlx == NULL)
+	if (init_mlx(&data) != 0)
 	{
 		free(my_scene.objects);
-		return(1);
+		return (1);
 	}
-	data.win = mlx_new_window(data.mlx, WIDTH, HEIGHT, "miniRT");
-	data.img = mlx_new_image(data.mlx, WIDTH, HEIGHT);
-	data.addr = mlx_get_data_addr(data.img, &data.bits_per_pixel, &data.line_length, &data.endian);
-	y = 0;
-    fov_fact = fov_factor(my_scene.camera.fov);
-    while (y < HEIGHT)
-    {
-        x = 0;
-        while(x < WIDTH)
-        {
-            ray.origin = my_scene.camera.position;
-            temp.x = ndc_x(x) * ASPECT_RATIO * fov_fact;
-            temp.y = ndc_y(y) * fov_fact;
-            temp.z = 1.0;
-			ray.direction = vec_normalize(vec_sub(temp, ray.origin));
-			x++;
-		}
-		y++;
-	}
-	mlx_put_image_to_window(data.mlx, data.win, data.img, 0, 0);
+	render_scene(&data, &my_scene);
 	mlx_loop(data.mlx);
+	return (0);
 }

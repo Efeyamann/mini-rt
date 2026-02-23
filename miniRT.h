@@ -104,7 +104,10 @@ double vec_dot_product(t_vec3 vector1, t_vec3 vector2);
 double ndc_x(int x);
 double ndc_y(int y);
 double fov_factor(int fov);
-
-
+double check_intersection(t_ray ray, t_object *obj);
+t_ray	generate_ray(int x, int y, t_scene *scene, double fov_fact);
+int	init_mlx(t_data *data);
+void	render_scene(t_data *data, t_scene *scene);
+double	get_closest_intersection(t_ray ray, t_object *objects);
 
 #endif
